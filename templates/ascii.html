@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html>
+  <title>ASCII Code</title>
+  <head>
+    <meta charset="utf-8">
+    <!-- CSS STYLING -->
+    <style>
+        html {
+          background-image: linear-gradient(180deg, #162944, #2e48cf, #67baf1);
+          font-family: "Courier New";
+          height: 100%;
+        }
+
+        h1 {
+          font-size: 50px;
+          text-decoration: underline;
+          text-decoration-color: white;
+        }
+
+        #user-input {
+          padding: 25px;
+          border: 2px solid black;
+        }
+
+        #enter-msg {
+          font-size: 25px;
+        }
+
+        .popup {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          min-height: 100vh;
+          flex-direction: column;
+        }
+
+        .parent {
+          margin: 1rem;
+          text-align: center;
+        }
+
+        .child {
+          display: inline-block;
+          padding: 1rem 1rem;
+          vertical-align: middle;
+        }
+
+
+        .button-code {
+          padding: 15px;
+
+        }
+
+        .button-style {
+          padding: 15px;
+          border: 2px solid white;
+          border-radius: 0px;
+          font-family: "Courier New";
+          padding: 18px 36px;
+          display: inline-block;
+          font-size: 25px;
+          letter-spacing: 1px;
+          cursor: pointer;
+          box-shadow: inset 0 0 0 0 #D80286;
+          -webkit-transition: ease-out 0.4s;
+          -moz-transition: ease-out 0.4s;
+          transition: ease-out 0.4s;
+        }
+
+        .slide_right:hover {
+          box-shadow: inset 400px 0 0 0 #67baf1;
+        }
+
+        .message-counter {
+          font-weight: bold;
+        }
+        .saved-data {
+          font-weight: bold;
+        }
+    </style>
+  </head>
+
+  <!-- Contents of the page -->
+  <body>
+    <div class = "popup">
+      <h1>ASCII Code...</h1>
+
+      <!-- BODY: Does all functionality, allows user to enter a message and outputs response -->
+      <div class = "parent">
+        <div class = "child">
+          <h3>
+            <!-- Prompts user to enter a message -->
+            <form method="POST" action="/process">
+              <label id = "enter-msg" for = "message"> Enter your message: </label>
+
+              <!-- Enter message here -->
+              <input type="text" id="user-input" name="message" placeholder="Enter your message here.">
+
+              <div class = "child">
+                <!-- button to encode data -->
+                <button id="add-msg" class="button-style slide_right" onClick="myFunction()">Encode</button>
+              </div>
+            </form>
+          </h3>
+          <!-- Outputs final message to user -->
+          <h3>
+              <label for="code-msg">Coded message:</label>
+              <p id="encode_msg">
+                  {% for char in output %}
+                      {{ char }}
+                  {% endfor %}
+              </p>
+          </h3>
+        </div>
+        <div id="saved-data"></div>
+      </div>
+
+      <div id = "results"></div>
+
+
+    </div>
+
+  <!-- JS FILE: Week 9 Sprint Implementation -->
+  <script>
+    // myFunction: implements a counter for number of times encoded button pressed
+    let num = 0;
+    function myFunction() {
+      console.log("in my function");
+      num++;
+      console.log(num);
+      var encodedMsg = document.getElementById("user-input").value;
+      saveData(encodedMsg);
+    }
+
+      // gathers the input from the user input textbox
+      function saveData() {
+        var userInput = document.getElementById("user-input").value;
+        var messages = JSON.parse(localStorage.getItem("messages")) || [];
+        messages.push(userInput);
+        localStorage.setItem("messages", JSON.stringify(messages));
+        displayData();
+        }
+
+      // displays the data of recently added message
+      function displayData() {
+          var savedData = document.getElementById("saved-data");
+          var messages = JSON.parse(localStorage.getItem("messages")) || [];
+          if (messages.length > 0) {
+            var list = document.createElement("ul");
+            for (var i = 0; i < messages.length; i++) {
+              var listItem = document.createElement("li");
+              listItem.textContent = messages[i];
+              list.appendChild(listItem);
+            }
+            savedData.innerHTML = "Previous messages:";
+            savedData.appendChild(list);
+          } else {
+            savedData.innerHTML = "No previous messages";
+          }
+        }
+
+      displayData();
+
+    </script>
+  </body>
+
+</html>
